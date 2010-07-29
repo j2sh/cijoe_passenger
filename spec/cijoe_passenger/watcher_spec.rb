@@ -76,7 +76,70 @@ describe Watcher, "the class" do
 
     it "splits on space and gets the first entry as origin master head sha" do
       @watcher.should_receive(:ls_remote_origin_master).and_return('sha path')
-      @watcher.origin_master_head.should == 'sha'
+      @watcher.current_head.should == 'sha'
+    end
+
+    it "have a path to the file with the previous head sha" do
+      @watcher.prev_head_path.should == "tmp/repo"
+    end
+
+    it "knows if a prev head file exists" do
+      @watcher.stub!(:prev_head_path).and_return('prev_head_path')
+      File.should_receive(:exist?).with('prev_head_path').and_return(true)
+      @watcher.prev_head_file?.should be(true)
+    end
+
+    it "reads the sha from a prev_head file" do
+      @watcher.stub!(:prev_head_file?).and_return(true)
+      f = stub
+      f.stub!(:readline).and_return("sha\n")
+      @watcher.stub!(:prev_head_path).and_return('prev_head_path')
+      File.stub!(:open).with('prev_head_path').and_yield(f)
+      @watcher.prev_head.should == 'sha'
+    end
+
+    it "reads the sha from a prev_head file" do
+      @watcher.stub!(:prev_head_file?).and_return(false)
+      @watcher.prev_head.should be(nil)
+    end
+
+    it "not be refreshable is current_head matches prev_head" do
+      @watcher.stub!(:current_head).and_return('a')
+      @watcher.stub!(:prev_head).and_return('a')
+      @watcher.refreshable?.should be(false)
+    end
+
+    it "be refreshable if current_head doesnt match prev_head" do
+      @watcher.stub!(:current_head).and_return('a')
+      @watcher.stub!(:prev_head).and_return('b')
+      @watcher.refreshable?.should be(true)
+    end
+
+    it "updates the prev_head_file with current_head" do
+      f = mock
+      f.should_receive(:<<).with('current_head')
+      File.stub!(:open).with('prev_head_path', 'w').and_yield(f)
+      @watcher.stub!(:prev_head_path).and_return('prev_head_path')
+      @watcher.stub!(:current_head).and_return('current_head')
+      @watcher.update_prev_head
+    end
+
+    it "refreshes by updating prev head and requesting a build" do
+      @watcher.should_receive(:update_prev_head)
+      @watcher.should_receive(:request_build)
+      @watcher.refresh
+    end
+
+    it "refreshes if refreshable during scan" do
+      @watcher.stub!(:refreshable?).and_return(true)
+      @watcher.should_receive(:refresh)
+      @watcher.scan
+    end
+
+    it "does not refresh if not refreshable during scan" do
+      @watcher.stub!(:refreshable?).and_return(false)
+      @watcher.should_receive(:refresh).never
+      @watcher.scan
     end
   end
 end
