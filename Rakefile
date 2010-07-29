@@ -13,8 +13,6 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.rcov_opts = ['--exclude', 'spec,gems,cijoe_passenger.rb']
 end
 
-# task :spec => :check_dependencies
-
 task :default => :spec
 
 require 'rake/rdoctask'
