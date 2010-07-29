@@ -6,12 +6,16 @@ module CIJoePassenger
       Dir['*'].select{|f| File.directory?(f)}
     end
 
-    def self.repos
-      dirs.select{|d| repo?(d) }
+    def self.git_path(dir)
+      File.join(dir, '.git')
     end
 
     def self.repo?(dir)
-      File.exist?(File.join(dir, '.git'))
+      File.exist?(git_path(dir))
+    end
+
+    def self.repos
+      dirs.select{|d| repo?(d) }
     end
 
     def self.scan

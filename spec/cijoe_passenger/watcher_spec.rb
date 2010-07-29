@@ -15,4 +15,10 @@ describe Watcher do
     Dir.stub!(:[]).and_return(dirs)
     Watcher.dirs.should == ['dir']
   end
+
+  it "check to see if git_path exists in order to determine if repo exists" do
+    Watcher.stub!(:git_path).with('dir').and_return('dir/.git')
+    File.should_receive(:exist?).with('dir/.git').and_return(true)
+    Watcher.repo?('dir').should == true
+  end
 end
