@@ -20,8 +20,7 @@ module CIJoePassenger
 
     def self.scan
       repos.each do |r|
-        watcher = Watcher.new(r)
-        watcher.scan
+        Watcher.new(r).scan
       end
     end
 
@@ -29,14 +28,20 @@ module CIJoePassenger
       @repo = repo
     end
 
-    def scan
-      puts head
+    def sh(command)
+      Dir.chdir(repo) { `#{command}` }
     end
 
-    def head
-      Dir.chdir(repo) do
-        `git ls-remote origin master`.split(' ').first
-      end
+    def ls_remote_origin_master
+      sh "git ls-remote origin master"
+    end
+
+    def origin_master_head
+      ls_remote_origin_master.split(' ').first
+    end
+
+    def scan
+      puts origin_master_head
     end
   end
 end
