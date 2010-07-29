@@ -23,7 +23,7 @@ module CIJoePassenger
       cijoe_config_filename = "/etc/httpd/conf.d/cijoe.conf"
 
       apache_config = File.new(cijoe_config_filename, "r").readlines
-      apache_config.insert(1, "\t/#{name}/public\n")
+      apache_config.insert(1, "\tRackBaseURI /#{name}/public\n")
 
       current_count = apache_config[-2].chomp.split(' ').last.to_i
       apache_config[-2].gsub!("#{current_count}", "#{current_count+1}")

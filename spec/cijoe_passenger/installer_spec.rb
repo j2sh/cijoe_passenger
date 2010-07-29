@@ -22,7 +22,7 @@ describe Installer, "the class" do
     File.stub!(:new).with(cijoe_config_filename, "r").and_return(stub(:readlines => ["Line 1\n", "Line 2\n", "Last Line"]))
 
     write_file = mock
-    write_file.should_receive(:writes).with("Line 1\n\t/bypass/public\nLine 3\nLast Line")
+    write_file.should_receive(:writes).with("Line 1\n\tRackBaseURI /bypass/public\nLine 3\nLast Line")
     File.stub!(:new).with(cijoe_config_filename, "w").and_return(write_file)
 
     Installer.update_apache_config("bypass")

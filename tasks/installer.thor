@@ -4,11 +4,11 @@ class Installer < Thor
   method_options :campfire => :hash
   def add(name, repo)
 
-    clone_repo(repo, name)
-    bundle_install(name)
-    link_config_rackup(name)
-    update_apache_config(name)
-    configure_cijoe_runner(name)
+    Installer.clone_repo(repo, name)
+    Installer.bundle_install(name)
+    Installer.link_config_rackup(name)
+    Installer.update_apache_config(name)
+    Installer.configure_cijoe_runner(name)
 
     # configure_campfire
     # 
