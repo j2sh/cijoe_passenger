@@ -1,0 +1,1 @@
+require 'cijoe_passenger/watcher'
