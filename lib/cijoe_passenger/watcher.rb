@@ -1,6 +1,6 @@
 module CIJoePassenger
   class Watcher
-    attr_reader :repo
+    attr_reader :name
 
     class << self
       def dirs
@@ -26,24 +26,16 @@ module CIJoePassenger
       end
     end
 
-    def initialize(repo)
-      @repo = repo
-    end
-
-    def sh(command, dir = repo)
-      Dir.chdir(dir) { `#{command}` }
-    end
-
-    def ls_remote_origin_master
-      sh "git ls-remote origin master"
+    def initialize(name)
+      @name = name
     end
 
     def current_head
-      @current_head ||= ls_remote_origin_master.split(' ').first
+      @current_head ||= Git.ls_remote_origin_master.split(' ').first
     end
 
     def prev_head_path
-      "tmp/#{repo}"
+      "tmp/#{name}"
     end
 
     def prev_head_file?
@@ -67,6 +59,8 @@ module CIJoePassenger
     end
 
     def request_build
+      uri = URI.parse("#{Config.cijoe_url}/#{name}")
+      Net::HTTP.post_form(url, {})
     end
 
     def refresh

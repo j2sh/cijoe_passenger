@@ -1,3 +1,12 @@
 $LOAD_PATH << 'cijoe_passenger'
+require 'net/http'
+require 'uri'
 require 'cijoe_passenger/watcher'
 require 'cijoe_passenger/installer'
+
+module CIJoePassenger
+  Config = OpenStruct.new({
+    :cijoe_url => "http://cijoe.yourcompany.com",
+    :apache_config_path => "/etc/httpd/conf.d/cijoe.conf"
+  })
+end

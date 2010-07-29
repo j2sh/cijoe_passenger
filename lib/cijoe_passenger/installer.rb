@@ -1,41 +1,68 @@
 module CIJoePassenger
-  module Installer
-    extend self
+  class Installer
+    attr_reader :name, :repo
 
-    WORKING_DIRECTORY = "/var/www/cijoe-passenger/"
-
-    def clone_repo(repo, name)
-      system "git clone #{repo} #{File.join(WORKING_DIRECTORY, name)}"
+    def initialize(name, repo)
+      @name = name
+      @repo = repo
     end
 
-    def bundle_install(name)
-      system "cd #{File.join(WORKING_DIRECTORY, name)}; [[ -f Gemfile ]] && bundle install"
+    def bundle_install
+      Sh.exec "[[ -f Gemfile ]] && bundle install", name
     end
 
-    def link_config_rackup(name)
-      from = File.join(WORKING_DIRECTORY, "config", "config.ru")
-      to = File.join(WORKING_DIRECTORY, "bypass", "public", "config.ru")
-
-      system "ln -s #{from} #{to}"
+    def link_rack_config
+      from = File.join("config", "config.ru")
+      to = File.join(name, "public", "config.ru")
+      Sh.exec "ln -s #{from} #{to}"
     end
 
-    def update_apache_config(name)
-      cijoe_config_filename = "/etc/httpd/conf.d/cijoe.conf"
+    def apache_config
+      @apache_config ||= File.open(Config.apache_config_path, "r") do |f|
+        f.readlines
+      end
+    end
 
-      apache_config = File.new(cijoe_config_filename, "r").readlines
+    def add_rack_base_uri_to_apache_config
       apache_config.insert(1, "\tRackBaseURI /#{name}/public\n")
-
-      current_count = apache_config[-2].chomp.split(' ').last.to_i
-      apache_config[-2].gsub!("#{current_count}", "#{current_count+1}")
-
-      File.new(cijoe_config_filename, "w").writes(apache_config.join(""))
     end
 
-    def configure_cijoe_runner(name)
-      system "cd #{File.join(WORKING_DIRECTORY, name)}; git config --add cijoe.runner \"rake cruise\""
+    def save_apache_config
+      File.open(Config.apache_config_path, 'w') do |f|
+        f.writes(apache_config.join(""))
+      end
+    end
+
+    def update_apache_config
+      add_rack_base_uri_to_apache_config
+      save_apache_config
+    end
+
+    def configure_cijoe_runner
+      Git.add_config_to_repo("cijoe.runner", "rake cruise", name)
     end
 
     def configure_campfire
+      # if options[:campfire] && options[:campfire].keys == [:user, :pass, :subdomain, :room]
+      #   { "user"=>options[:campfire][:user],
+      #     "pass"=>options[:campfire][:pass],
+      #     "subdomain"=>options[:campfire][:subdomain],
+      #     "room"=>options[:campfire][:room],
+      #     "ssl"=>true }.each do |k,v|
+      # 
+      #     `git config --add campfire.#{k} #{v}`
+      #   end
+      # end
+    end
+
+    def add
+      Git.clone(repo)
+      bundle_install
+      link_rack_config
+      update_apache_config
+      configure_cijoe_runner
+      configure_campfire
+      puts "Don't forget to setup a config/database.yml"
     end
   end
 end
