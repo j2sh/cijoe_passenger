@@ -57,30 +57,20 @@ describe Watcher, "the class" do
 
   describe Watcher, "the instance" do
     before do
-      @watcher = Watcher.new('repo')
+      @watcher = Watcher.new('name')
     end
     
-    it "has a repo reader" do
-      @watcher.repo.should == 'repo'
-    end
-
-    it "executes a shell command in the repo dir" do
-      Dir.should_receive(:chdir).with('repo').and_yield
-      @watcher.sh("echo hi").should == "hi\n"
-    end
-
-    it "uses git to ls-remote origin/master" do
-      @watcher.should_receive(:sh).with("git ls-remote origin master").and_return('head')
-      @watcher.ls_remote_origin_master.should == 'head'
+    it "has a name reader" do
+      @watcher.name.should == 'name'
     end
 
     it "splits on space and gets the first entry as origin master head sha" do
-      @watcher.should_receive(:ls_remote_origin_master).and_return('sha path')
+      Git.should_receive(:ls_remote_origin_master).and_return('sha path')
       @watcher.current_head.should == 'sha'
     end
 
     it "have a path to the file with the previous head sha" do
-      @watcher.prev_head_path.should == "tmp/repo"
+      @watcher.prev_head_path.should == "tmp/name"
     end
 
     it "knows if a prev head file exists" do
