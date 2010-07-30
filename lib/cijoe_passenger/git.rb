@@ -1,5 +1,13 @@
 module CIJoePassenger
   module Git
+    def self.git_path(dir)
+      File.join(dir, '.git')
+    end
+
+    def self.repo?(dir)
+      File.exist?(git_path(dir))
+    end
+
     def self.clone(repo)
       Sh.exec "git clone #{repo}"
     end

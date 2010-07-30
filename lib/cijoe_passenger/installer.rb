@@ -1,11 +1,12 @@
 module CIJoePassenger
-  class Installer
-    attr_reader :name, :repo, :campfire
+  class Installer < Thor::Group
+    namespace :add
+    argument :name, :type => :string, :desc => "The project name"
+    argument :repo, :type => :string, :desc => "The git repo address"
+    argument :campfire, :type => :hash, :desc => "A hash of campfire options", :default => {}
 
-    def initialize(name, repo, campfire)
-      @name = name
-      @repo = repo
-      @campfire = campfire
+    def clone
+      Git.clone(repo)
     end
 
     def bundle_install
@@ -18,25 +19,8 @@ module CIJoePassenger
       Sh.exec "ln -s #{from} #{to}"
     end
 
-    def apache_config
-      @apache_config ||= File.open(Config.apache_config_path, "r") do |f|
-        f.readlines
-      end
-    end
-
-    def add_rack_base_uri_to_apache_config
-      apache_config.insert(1, "\tRackBaseURI /#{name}/public\n")
-    end
-
-    def save_apache_config
-      File.open(Config.apache_config_path, 'w') do |f|
-        f.writes(apache_config.join(""))
-      end
-    end
-
-    def update_apache_config
-      add_rack_base_uri_to_apache_config
-      save_apache_config
+    def add_app_to_apache_config
+      ApacheConfig.add_app(name)
     end
 
     def configure_cijoe_runner
@@ -49,13 +33,7 @@ module CIJoePassenger
       end
     end
 
-    def add
-      Git.clone(repo)
-      bundle_install
-      link_rack_config
-      update_apache_config
-      configure_cijoe_runner
-      configure_campfire
+    def remind
       puts "Don't forget to setup a config/database.yml"
     end
   end
