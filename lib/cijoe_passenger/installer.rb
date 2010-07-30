@@ -39,7 +39,7 @@ module CIJoePassenger
     end
 
     def configure_cijoe_runner
-      Git.add_config_to_repo("cijoe.runner", "rake cruise", name)
+      Git.add_config_to_repo("cijoe.runner", Config.runner, name)
     end
 
     def configure_campfire
