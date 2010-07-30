@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+  # all of the apps running CIJoe
+  RackBaseURI /yrapp/public
+  RackBaseURI /another/public
+
+  ServerName cijoe.yrcompany.com
+  SetEnv PATH /path/to/git:/path/to/cijoe
+  SetEnv RAILS_RELATIVE_URL_ROOT
+  DocumentRoot /path/to/cijoe-passenger
+
+  ErrorLog /path/to/cijoe-passenger/logs/ci-error_log
+  CustomLog /path/to/cijoe-passenger/logs/ci-access_log combined
+
+  PassengerMaxInstancesPerApp 1
+   # 1 for each CIJoe Instance
+  PassengerMaxPoolSize 10
+</VirtualHost>
