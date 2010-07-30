@@ -1,10 +1,11 @@
 module CIJoePassenger
   class Installer
-    attr_reader :name, :repo
+    attr_reader :name, :repo, :campfire
 
-    def initialize(name, repo)
+    def initialize(name, repo, campfire)
       @name = name
       @repo = repo
+      @campfire = campfire
     end
 
     def bundle_install
@@ -43,16 +44,9 @@ module CIJoePassenger
     end
 
     def configure_campfire
-      # if options[:campfire] && options[:campfire].keys == [:user, :pass, :subdomain, :room]
-      #   { "user"=>options[:campfire][:user],
-      #     "pass"=>options[:campfire][:pass],
-      #     "subdomain"=>options[:campfire][:subdomain],
-      #     "room"=>options[:campfire][:room],
-      #     "ssl"=>true }.each do |k,v|
-      # 
-      #     `git config --add campfire.#{k} #{v}`
-      #   end
-      # end
+      campfire.each do |k, v|
+        Git.add_config_to_repo("campfire.#{k}", v, name)
+      end
     end
 
     def add
