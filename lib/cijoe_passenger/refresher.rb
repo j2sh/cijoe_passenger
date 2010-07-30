@@ -4,7 +4,8 @@ module CIJoePassenger
     argument :name, :type => :string, :desc => "The project name"
 
     def update_prev_head
-      Project.new(name).update_prev_head
+      proj = Project.new(name)
+      proj.update_prev_head
     end
 
     def request_build

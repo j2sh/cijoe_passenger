@@ -1,4 +1,7 @@
 $LOAD_PATH << 'cijoe_passenger'
+require 'bundler'
+Bundler.require
+require 'thor/group'
 require 'net/http'
 require 'uri'
 require 'ostruct'
@@ -9,6 +12,7 @@ require 'cijoe_passenger/project'
 require 'cijoe_passenger/watcher'
 require 'cijoe_passenger/refresher'
 require 'cijoe_passenger/installer'
+
 
 module CIJoePassenger
   Config = OpenStruct.new({

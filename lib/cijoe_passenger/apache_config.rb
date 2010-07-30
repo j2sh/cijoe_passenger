@@ -26,12 +26,12 @@ module CIJoePassenger
       end
     end
 
-    def add_app(name)
+    def self.add_app(name)
       config = read.insert(1, "\tRackBaseURI /#{name}/public\n")
       write(config)
     end
 
-    def write(config)
+    def self.write(config)
       File.open(Config.apache_config_path, 'w') do |f|
         f.writes(config.join(""))
       end
