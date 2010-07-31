@@ -9,9 +9,9 @@ require 'cijoe_passenger/sh'
 require 'cijoe_passenger/git'
 require 'cijoe_passenger/apache_config'
 require 'cijoe_passenger/project'
-require 'cijoe_passenger/watcher'
-require 'cijoe_passenger/refresher'
-require 'cijoe_passenger/installer'
+require 'cijoe_passenger/watch'
+require 'cijoe_passenger/refresh'
+require 'cijoe_passenger/add'
 
 
 module CIJoePassenger

@@ -1,5 +1,5 @@
 module CIJoePassenger
-  class Installer < Thor::Group
+  class Add < Thor::Group
     namespace :add
     argument :name, :type => :string, :desc => "The project name"
     argument :repo, :type => :string, :desc => "The git repo address"

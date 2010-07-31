@@ -1,5 +1,5 @@
 module CIJoePassenger
-  class Refresher < Thor::Group
+  class Refresh < Thor::Group
     namespace :refresh
     argument :name, :type => :string, :desc => "The project name"
 

@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe Watcher, "the instance" do
+describe Watch, "the instance" do
   before do
-    @watcher = Watcher.new
+    @watch = Watch.new
   end
 
   it "invoke refresh on each refreshable project" do
     project = stub
     project.stub(:name).and_return('project')
     Project.stub!(:refreshable).and_return([project])
-    @watcher.should_receive(:invoke).with("refresh", ['project'])
-    @watcher.scan
+    @watch.should_receive(:invoke).with("refresh", ['project'])
+    @watch.scan
   end
 end

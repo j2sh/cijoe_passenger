@@ -1,5 +1,5 @@
 module CIJoePassenger
-  class Watcher < Thor::Group
+  class Watch < Thor::Group
     namespace :watch
 
     def scan
