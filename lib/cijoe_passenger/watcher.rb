@@ -3,8 +3,8 @@ module CIJoePassenger
     namespace :watch
 
     def scan
-      Project.all.each do |p|
-        invoke "refresh", [p.name] if p.refreshable?
+      Project.refreshable.each do |p|
+        invoke "refresh", [p.name]
       end
     end
   end

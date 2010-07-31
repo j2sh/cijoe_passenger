@@ -10,7 +10,7 @@ module CIJoePassenger
 
     def request_build
       uri = URI.parse("http://#{Config.cijoe_url}/#{name}")
-      Net::HTTP.post_form(url, {})
+      Net::HTTP.post_form(uri, {})
     end
   end
 end

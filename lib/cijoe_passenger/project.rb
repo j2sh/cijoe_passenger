@@ -12,6 +12,10 @@ module CIJoePassenger
       dirs.collect{|d| Project.new(d) }
     end
 
+    def self.refreshable
+      all.select(&:refreshable?)
+    end
+
     def initialize(name)
       @name = name
     end
