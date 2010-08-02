@@ -8,7 +8,7 @@ begin
     gem.summary = %Q{Makes CIJoe awesomer.}
     gem.description = %Q{Generates a CIJoe passenger instance with projects that automatically build.}
     gem.email = "gotascii@gmail.com"
-    gem.homepage = "github.com/vigetlabs/cijoe-passenger"
+    gem.homepage = "http://github.com/vigetlabs/cijoe_passenger"
     gem.authors = ["Justin Marney", "Tony Pitale"]
     gem.add_development_dependency "rspec", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'cijoe_passenger'
+
+ARGV << '--help' if ARGV.empty?
+
+command = ARGV.shift
+
+case command
+when '-h', '--help'
+  puts <<-EOT
+Usage: cijoep COMMAND [ARGS]
+
+Commands:
+install   Install cijoe_passenger into current directory
+add NAME  Adds application named NAME to current cijoe_passenger directory
+    EOT
+else
+  CIJoePassenger.const_get(command.capitalize.to_sym).start(ARGV)
+end

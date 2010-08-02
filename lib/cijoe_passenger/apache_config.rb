@@ -1,40 +1,14 @@
 module CIJoePassenger
-  module ApacheConfig
-    def self.template
-      wd = File.expand(Dir.pwd)
-      <<-TEMPLATE
-      <VirtualHost *:80>
+  class ApacheConfig < Thor
+    include Thor::Actions
 
-        ServerName #{Config.cijoe_url}
-        SetEnv PATH /usr/bin:/usr/local/bin
-        SetEnv RAILS_RELATIVE_URL_ROOT
-        DocumentRoot #{wd}
+    namespace :apache_config
 
-        ErrorLog #{wd}/logs/ci-error_log
-        CustomLog #{wd}/logs/ci-access_log combined
-
-        PassengerMaxInstancesPerApp 1
-        # set this higher than the total number of cijoe apps you have
-        PassengerMaxPoolSize 20
-      </VirtualHost>
-      TEMPLATE
-    end
-
-    def self.read
-      File.open(Config.apache_config_path, "r") do |f|
-        f.readlines
-      end
-    end
-
-    def self.add_app(name)
-      config = read.insert(1, "\tRackBaseURI /#{name}/public\n")
-      write(config)
-    end
-
-    def self.write(config)
-      File.open(Config.apache_config_path, 'w') do |f|
-        f.writes(config.join(""))
-      end
+    desc "add_rack_base_uri NAME", "adds app with NAME to apache config"
+    def add_rack_base_uri(name)
+      inject_into_file(Config.apache_config_path,
+        "  RackBaseURI /#{name}/public\n",
+        :after => "<VirtualHost *:80>\n")
     end
   end
 end

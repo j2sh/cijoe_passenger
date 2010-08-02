@@ -1,0 +1,14 @@
+<VirtualHost *:80>
+
+  ServerName <%= @cijoe_url %>
+  SetEnv PATH /usr/bin:/usr/local/bin
+  SetEnv RAILS_RELATIVE_URL_ROOT
+  DocumentRoot <%= @app_path %>
+
+  ErrorLog <%= @app_path %>/log/error_log
+  CustomLog <%= @app_path %>/log/access_log combined
+
+  PassengerMaxInstancesPerApp 1
+  # set this higher than the total number of cijoe apps you have
+  PassengerMaxPoolSize 20
+</VirtualHost>
