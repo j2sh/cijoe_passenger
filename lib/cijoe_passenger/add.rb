@@ -8,12 +8,12 @@ module CIJoePassenger
     argument :campfire, :type => :hash, :desc => "A hash of campfire options", :default => {}
 
     def clone
-      invoke "git:clone", [repo]
+      invoke "git:clone", [name, repo]
     end
 
     def link_rack_config
       from = File.join(Dir.pwd, "config", "config.ru")
-      to = File.join(name, "public", "config.ru")
+      to = File.join(name, "config.ru")
       run "ln -s #{from} #{to}"
     end
 
@@ -29,6 +29,11 @@ module CIJoePassenger
       campfire.each do |k, v|
         invoke "git:add_config_to_repo", [name, "campfire.#{k}", v]
       end
+    end
+
+    def create_skeleton
+      empty_directory File.join(name, 'public')
+      empty_directory File.join(name, 'tmp')
     end
 
     def remind

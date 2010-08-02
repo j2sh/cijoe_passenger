@@ -8,7 +8,7 @@ module CIJoePassenger
     def install
       @cijoe_url = Config.cijoe_url
       @app_path = Dir.pwd
-      directory 'templates', Dir.pwd
+      directory 'templates', @app_path
     end
   end
 end

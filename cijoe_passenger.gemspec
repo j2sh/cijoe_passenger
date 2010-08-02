@@ -45,7 +45,9 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb",
      "tasks/cijoe_passenger.thor",
      "templates/config/cijoe_passenger.conf.tt",
-     "templates/config/config.ru"
+     "templates/config/config.ru",
+     "templates/log/access_log",
+     "templates/log/error_log"
   ]
   s.homepage = %q{http://github.com/vigetlabs/cijoe_passenger}
   s.rdoc_options = ["--charset=UTF-8"]

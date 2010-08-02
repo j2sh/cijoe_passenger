@@ -21,7 +21,7 @@ module CIJoePassenger
     end
 
     def prev_head_path
-      File.join("tmp", name)
+      File.join(name, "tmp", "head")
     end
 
     def prev_head_file?
@@ -35,7 +35,7 @@ module CIJoePassenger
     end
 
     def current_head
-      @current_head ||= Git.origin_head_sha
+      @current_head ||= Git.start(['origin_head_sha'])
     end
 
     def refreshable?
