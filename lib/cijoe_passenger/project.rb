@@ -30,12 +30,12 @@ module CIJoePassenger
 
     def prev_head
       File.open(prev_head_path) do |f|
-        f.readline.chop
+        f.readline
       end if prev_head_file?
     end
 
     def current_head
-      @current_head ||= Git.start(['origin_head_sha'])
+      @current_head ||= Git.start(['origin_head_sha', name])
     end
 
     def refreshable?

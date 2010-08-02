@@ -9,25 +9,20 @@ module CIJoePassenger
     end
 
     def self.repo?(dir)
-
-    desc "ls_remote_origin_master", "git ls-remote origin master"
-    def ls_remote_origin_master(name)
-      inside_work(name) do
-        run "git ls-remote origin master"
-      end
+      File.exist?(git_path(dir))
     end
 
-    desc "origin_head_sha", "origin/master/HEAD sha"
+    desc "origin_head_sha NAME", "origin/master/HEAD sha"
     def origin_head_sha(name)
       ls_remote_origin_master(name).split(' ').first
     end
 
-    desc "clone URL", "clone a git repository into the work directory"
-    def clone(name, repo)
-      run "git clone #{repo} #{work_path(name)}"
+    desc "clone NAME URL", "clone a git repository into the work directory"
+    def clone(name, url)
+      run "git clone #{url} #{work_path(name)}"
     end
 
-    desc "add_config_to_repo NAME KEY VALUE", "add a config KEY VALUE entry to repo inside directory NAME"
+    desc "add_config_to_repo NAME KEY VALUE", "add a config KEY VALUE entry to repo inside work directory of NAME"
     def add_config_to_repo(name, key, value)
       inside_work(name) do
         run "git config --add \"#{key}\" \"#{value}\""
@@ -41,6 +36,14 @@ module CIJoePassenger
 
       def inside_work(name, &block)
         inside(work_path(name), &block)
+      end
+
+      def ls_remote_origin_master(name)
+        res = ''
+        inside_work(name) do
+          res = run("git ls-remote origin master")
+        end
+        res
       end
     end
   end

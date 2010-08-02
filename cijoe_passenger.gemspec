@@ -35,7 +35,6 @@ Gem::Specification.new do |s|
      "lib/cijoe_passenger/install.rb",
      "lib/cijoe_passenger/project.rb",
      "lib/cijoe_passenger/refresh.rb",
-     "lib/cijoe_passenger/watch.rb",
      "spec/cijoe_passenger/add_spec.rb",
      "spec/cijoe_passenger/apache_config_spec.rb",
      "spec/cijoe_passenger/git_spec.rb",

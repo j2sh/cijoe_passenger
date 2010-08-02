@@ -1,6 +1,6 @@
 module CIJoePassenger
-  class Watch < Thor::Group
-    namespace :watch
+  class Scan < Thor::Group
+    namespace :scan
 
     def scan
       Project.refreshable.each do |p|
