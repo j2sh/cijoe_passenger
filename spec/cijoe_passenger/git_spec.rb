@@ -1,29 +1,50 @@
 require 'spec_helper'
 
 describe Git do
-  it "clones a repo" do
-    Sh.should_receive(:exec).with("git clone repo")
-    Git.clone('repo')    
+  before do
+    @git = Git.new(['name'])
   end
 
-  it "lists the remote origin master" do
-    Sh.should_receive(:exec).with("git ls-remote origin master")
-    Git.ls_remote_origin_master
+  it "has a path to the repo" do
+    @git.repo_path.should == "name/work"
   end
 
-  it "lists the remote origin master" do
-    Sh.should_receive(:exec).with("git config --add \"key\" \"value\"", 'repo')
-    Git.add_config_to_repo('key', 'value', 'repo')
-  end
-
-  it "generates a path to git based on dir" do
-    File.stub!(:join).with('dir', '.git').and_return('dir/.git')
-    Git.git_path('dir').should == 'dir/.git'
+  it "has a path to the git config dir" do
+    @git.git_path.should == "name/work/.git"
   end
 
   it "checks to see if git_path exists in order to determine if repo exists" do
-    Git.stub!(:git_path).with('dir').and_return('dir/.git')
-    File.should_receive(:exist?).with('dir/.git').and_return(true)
-    Git.repo?('dir').should == true
+    @git.stub!(:git_path).and_return('git_path')
+    File.should_receive(:exist?).with('git_path').and_return(true)
+    @git.repo?.should == true
+  end
+
+  it "runs a block inside the repo directory" do
+    @git.stub!(:repo_path).and_return('repo_path')
+    @git.should_receive(:inside).with('repo_path')
+    @git.inside_repo
+  end
+
+  it "runs git ls-remote origin master in the repo dir and returns output" do
+    @git.stub!(:inside_repo).and_yield
+    @git.should_receive(:run).with("git ls-remote origin master").and_return('ls_remote_origin_master')
+    @git.ls_remote_origin_master.should == 'ls_remote_origin_master'
+  end
+
+  it "split on space and pull the first segment back from ls_remote_origin_master as origin_head_sha" do
+    @git.stub!(:ls_remote_origin_master).and_return("123 some/junk")
+    @git.upstream_head.should == '123'
+  end
+
+  it "clones a repo into the repo_path" do
+    @git.stub!(:repo_path).and_return('repo_path')
+    @git.should_receive(:run).with("git clone repo repo_path")
+    @git.clone('repo')
+  end
+
+  it "runs git ls-remote origin master in the repo dir and returns output" do
+    @git.stub!(:inside_repo).and_yield
+    @git.should_receive(:run).with("git config --add \"key\" \"value\"")
+    @git.add_config_to_repo('key', 'value')
   end
 end

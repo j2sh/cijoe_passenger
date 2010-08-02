@@ -3,9 +3,7 @@ module CIJoePassenger
     namespace :scan
 
     def scan
-      Project.refreshable.each do |p|
-        invoke "refresh", [p.name]
-      end
+      Project.stale.each(&:build)
     end
   end
 end

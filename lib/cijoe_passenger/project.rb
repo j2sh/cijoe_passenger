@@ -1,51 +1,33 @@
 module CIJoePassenger
   class Project
-    attr_reader :name
+    attr_reader :name, :git
 
     def self.dirs
-      Dir['*'].select do |f|
-        Git.repo?(f)
+      Dir['*'].select do |name|
+        Git.new(name).repo?
       end
     end
 
     def self.all
-      dirs.collect{|d| Project.new(d) }
+      dirs.collect{|name| Project.new(name) }
     end
 
-    def self.refreshable
-      all.select(&:refreshable?)
+    def self.stale
+      all.select(&:stale?)
     end
 
     def initialize(name)
       @name = name
+      @git = Git.new([name])
     end
 
-    def prev_head_path
-      File.join(name, "tmp", "head")
+    def stale?
+      git.current_head != git.upstream_head
     end
 
-    def prev_head_file?
-      File.exist?(prev_head_path)
-    end
-
-    def prev_head
-      File.open(prev_head_path) do |f|
-        f.readline
-      end if prev_head_file?
-    end
-
-    def current_head
-      @current_head ||= Git.start(['origin_head_sha', name])
-    end
-
-    def refreshable?
-      current_head != prev_head
-    end
-
-    def update_prev_head
-      File.open(prev_head_path, "w") do |f|
-        f << current_head
-      end
+    def build
+      uri = URI.parse("http://#{Config.cijoe_url}/#{name}")
+      Net::HTTP.post_form(uri, {})
     end
   end
 end

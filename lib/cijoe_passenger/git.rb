@@ -1,49 +1,53 @@
 module CIJoePassenger
-  class Git < Thor
+  class Git < Thor::Group
     include Thor::Actions
 
     namespace :git
+    argument :name, :type => :string, :desc => "The project NAME"
 
-    def self.git_path(dir)
-      File.join(dir, 'work', '.git')
+    def repo_path
+      File.join(name, 'work')
     end
 
-    def self.repo?(dir)
-      File.exist?(git_path(dir))
+    def git_path
+      File.join(repo_path, '.git')
     end
 
-    desc "origin_head_sha NAME", "origin/master/HEAD sha"
-    def origin_head_sha(name)
-      ls_remote_origin_master(name).split(' ').first
+    def repo?
+      File.exist?(git_path)
     end
 
-    desc "clone NAME URL", "clone a git repository into the work directory"
-    def clone(name, url)
-      run "git clone #{url} #{work_path(name)}"
+    def inside_repo(&block)
+      inside(repo_path, &block)
     end
 
-    desc "add_config_to_repo NAME KEY VALUE", "add a config KEY VALUE entry to repo inside work directory of NAME"
-    def add_config_to_repo(name, key, value)
-      inside_work(name) do
+    def ls_remote_origin_master
+      res = ''
+      inside_repo do
+        res = run("git ls-remote origin master")
+      end
+      res
+    end
+
+    def upstream_head
+      ls_remote_origin_master.split(' ').first
+    end
+
+    def current_head
+      res = ''
+      inside(git_path) do
+        res = run("cat #{File.join('refs', 'heads', 'master')}")
+      end
+      res.chop
+    end
+
+    def clone(url)
+      run "git clone #{url} #{repo_path}"
+    end
+
+    def add_config_to_repo(key, value)
+      inside_repo do
         run "git config --add \"#{key}\" \"#{value}\""
-      end
-    end
-
-    no_tasks do
-      def work_path(name)
-        File.join(name, 'work')
-      end
-
-      def inside_work(name, &block)
-        inside(work_path(name), &block)
-      end
-
-      def ls_remote_origin_master(name)
-        res = ''
-        inside_work(name) do
-          res = run("git ls-remote origin master")
-        end
-        res
       end
     end
   end

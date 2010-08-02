@@ -2,9 +2,15 @@ require 'spec_helper'
 
 describe Project, "the class" do
   it "selects all the dirs that are repos" do
+    git1 = stub
+    git1.stub!(:repo?).and_return(true)
+    git2 = stub
+    git2.stub!(:repo?).and_return(false)
+
     dirs = ['dir1', 'dir2']
-    Git.stub!(:repo?).with('dir1').and_return(true)
-    Git.stub!(:repo?).with('dir2').and_return(false)
+    Git.stub!(:new).with('dir1').and_return(git1)
+    Git.stub!(:new).with('dir2').and_return(git2)
+
     Dir.should_receive(:[]).with('*').and_return(dirs)
     Project.dirs.should == ['dir1']
   end
@@ -16,10 +22,21 @@ describe Project, "the class" do
     Project.should_receive(:new).with(repo).and_return(repo)
     Project.all.should == repos
   end
+
+  it "selects only stale projects" do
+    p1 = stub
+    p1.stub!(:stale?).and_return(true)
+    p2 = stub
+    p2.stub!(:stale?).and_return(false)
+    Project.stub!(:all).and_return([p1, p2])
+    Project.stale.should == [p1]
+  end
 end
 
 describe Project, "the instance" do
   before do
+    @git = stub
+    Git.stub!(:new).with(['name']).and_return(@git)
     @project = Project.new('name')
   end
   
@@ -27,53 +44,26 @@ describe Project, "the instance" do
     @project.name.should == 'name'
   end
 
-  it "splits on space and gets the first entry as origin master head sha" do
-    Git.should_receive(:ls_remote_origin_master).and_return('sha path')
-    @project.current_head.should == 'sha'
+  it "has a git instance by default" do
+    @project.git.should == @git
   end
 
-  it "has a path to the file with the previous head sha" do
-    @project.prev_head_path.should == "tmp/name"
+  it "is not stale if current_head matches upstream_head" do
+    @git.stub!(:current_head).and_return('a')
+    @git.stub!(:upstream_head).and_return('a')
+    @project.stale?.should be(false)
+  end
+  
+  it "is stale if current_head doesnt match upstream_head" do
+    @git.stub!(:current_head).and_return('a')
+    @git.stub!(:upstream_head).and_return('b')
+    @project.stale?.should be(true)
   end
 
-  it "knows if a prev head file exists" do
-    @project.stub!(:prev_head_path).and_return('prev_head_path')
-    File.should_receive(:exist?).with('prev_head_path').and_return(true)
-    @project.prev_head_file?.should be(true)
-  end
-
-  it "reads the sha from a prev_head file" do
-    @project.stub!(:prev_head_file?).and_return(true)
-    f = stub
-    f.stub!(:readline).and_return("sha\n")
-    @project.stub!(:prev_head_path).and_return('prev_head_path')
-    File.stub!(:open).with('prev_head_path').and_yield(f)
-    @project.prev_head.should == 'sha'
-  end
-
-  it "has ni previous head if no prev head file" do
-    @project.stub!(:prev_head_file?).and_return(false)
-    @project.prev_head.should be(nil)
-  end
-
-  it "not be refreshable is current_head matches prev_head" do
-    @project.stub!(:current_head).and_return('a')
-    @project.stub!(:prev_head).and_return('a')
-    @project.refreshable?.should be(false)
-  end
-
-  it "be refreshable if current_head doesnt match prev_head" do
-    @project.stub!(:current_head).and_return('a')
-    @project.stub!(:prev_head).and_return('b')
-    @project.refreshable?.should be(true)
-  end
-
-  it "updates the prev_head_file with current_head" do
-    f = mock
-    f.should_receive(:<<).with('current_head')
-    File.stub!(:open).with('prev_head_path', 'w').and_yield(f)
-    @project.stub!(:prev_head_path).and_return('prev_head_path')
-    @project.stub!(:current_head).and_return('current_head')
-    @project.update_prev_head
+  it "send a request to cijoe to build the project" do
+    CIJoePassenger::Config.stub!(:cijoe_url).and_return('cijoe_url')
+    URI.should_receive(:parse).with("http://cijoe_url/name").and_return('uri')
+    Net::HTTP.should_receive(:post_form).with('uri', {})
+    @project.build
   end
 end

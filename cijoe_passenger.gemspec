@@ -30,17 +30,17 @@ Gem::Specification.new do |s|
      "cijoe_passenger.gemspec",
      "lib/cijoe_passenger.rb",
      "lib/cijoe_passenger/add.rb",
-     "lib/cijoe_passenger/apache_config.rb",
      "lib/cijoe_passenger/git.rb",
      "lib/cijoe_passenger/install.rb",
      "lib/cijoe_passenger/project.rb",
      "lib/cijoe_passenger/refresh.rb",
+     "lib/cijoe_passenger/scan.rb",
      "spec/cijoe_passenger/add_spec.rb",
-     "spec/cijoe_passenger/apache_config_spec.rb",
      "spec/cijoe_passenger/git_spec.rb",
+     "spec/cijoe_passenger/install_spec.rb",
      "spec/cijoe_passenger/project_spec.rb",
      "spec/cijoe_passenger/refresh_spec.rb",
-     "spec/cijoe_passenger/watch_spec.rb",
+     "spec/cijoe_passenger/scan_spec.rb",
      "spec/spec_helper.rb",
      "tasks/cijoe_passenger.thor",
      "templates/config/cijoe_passenger.conf.tt",
@@ -55,11 +55,11 @@ Gem::Specification.new do |s|
   s.summary = %q{Makes CIJoe awesomer.}
   s.test_files = [
     "spec/cijoe_passenger/add_spec.rb",
-     "spec/cijoe_passenger/apache_config_spec.rb",
      "spec/cijoe_passenger/git_spec.rb",
+     "spec/cijoe_passenger/install_spec.rb",
      "spec/cijoe_passenger/project_spec.rb",
      "spec/cijoe_passenger/refresh_spec.rb",
-     "spec/cijoe_passenger/watch_spec.rb",
+     "spec/cijoe_passenger/scan_spec.rb",
      "spec/spec_helper.rb"
   ]
 
