@@ -8,8 +8,8 @@ describe Project, "the class" do
     git2.stub!(:repo?).and_return(false)
 
     dirs = ['dir1', 'dir2']
-    Git.stub!(:new).with('dir1').and_return(git1)
-    Git.stub!(:new).with('dir2').and_return(git2)
+    Git.stub!(:new).with(['dir1']).and_return(git1)
+    Git.stub!(:new).with(['dir2']).and_return(git2)
 
     Dir.should_receive(:[]).with('*').and_return(dirs)
     Project.dirs.should == ['dir1']

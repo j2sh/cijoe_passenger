@@ -12,7 +12,7 @@ describe Add do
   end
 
   it "clones the repo" do
-    @git.should_receive(:clone).with(['repo'])
+    @git.should_receive(:clone).with('repo')
     @add.clone
   end
 
@@ -29,7 +29,7 @@ describe Add do
   
   it "configures cijoe runner in git config" do
     CIJoePassenger::Config.stub!(:runner).and_return('runner')
-    @git.should_receive(:add_config_to_repo).with(["cijoe.runner", 'runner'])
+    @git.should_receive(:add_config_to_repo).with("cijoe.runner", 'runner')
     @add.configure_cijoe_runner
   end
 

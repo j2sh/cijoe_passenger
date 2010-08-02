@@ -13,7 +13,7 @@ module CIJoePassenger
     end
 
     def clone
-      git.clone([repo])
+      git.clone(repo)
     end
 
     def link_rack_config
@@ -29,12 +29,12 @@ module CIJoePassenger
     end
     
     def configure_cijoe_runner
-      git.add_config_to_repo(["cijoe.runner", Config.runner])
+      git.add_config_to_repo("cijoe.runner", Config.runner)
     end
 
     def configure_campfire
       campfire.each do |k, v|
-        @git.add_config_to_repo(["campfire.#{k}", v])
+        @git.add_config_to_repo("campfire.#{k}", v)
       end
     end
 

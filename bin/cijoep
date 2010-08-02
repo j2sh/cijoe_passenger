@@ -14,7 +14,7 @@ Usage: cijoep COMMAND [ARGS]
 Commands:
 install   Install cijoe_passenger into current directory
 add NAME  Adds application named NAME to current cijoe_passenger directory
-scan      Scans all the projects for remote updates, pulls, and sends a build request to cijoe
+scan      Scans all the projects for updates upstream, pulls updates, and sends a build request to cijoe
     EOT
 else
   CIJoePassenger.const_get(command.capitalize.to_sym).start(ARGV)

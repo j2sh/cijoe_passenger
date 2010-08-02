@@ -4,7 +4,7 @@ module CIJoePassenger
 
     def self.dirs
       Dir['*'].select do |name|
-        Git.new(name).repo?
+        Git.new([name]).repo?
       end
     end
 
