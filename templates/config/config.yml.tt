@@ -1,2 +1,1 @@
 cijoe_url: <%= @cijoe_url %>
-runner: rake cruise

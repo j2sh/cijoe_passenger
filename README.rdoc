@@ -4,6 +4,8 @@ Generates a CIJoe passenger instance with projects that automatically build.
 
 == Usage
 
+Use passenger wrapper.
+
 Create a directory to serve as your cijoe root
   mkdir cijoep
 

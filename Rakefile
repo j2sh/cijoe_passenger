@@ -11,7 +11,7 @@ begin
     gem.homepage = "http://github.com/vigetlabs/cijoe_passenger"
     gem.authors = ["Justin Marney", "Tony Pitale"]
     gem.add_development_dependency "rspec", ">= 0"
-    gem.files << 'templates/log/*'
+    gem.files << 'templates/log/*' << 'templates/tmp/restart.txt'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

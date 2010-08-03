@@ -5,25 +5,17 @@ module CIJoePassenger
     namespace :git
     argument :name, :type => :string, :desc => "The project NAME"
 
-    def repo_path
-      File.join(name, 'work')
-    end
-
     def git_path
-      File.join(repo_path, '.git')
+      File.join(name, '.git')
     end
 
     def repo?
       File.exist?(git_path)
     end
 
-    def inside_repo(&block)
-      inside(repo_path, &block)
-    end
-
     def ls_remote_origin_master
       res = ''
-      inside_repo do
+      inside(name) do
         res = run("git ls-remote origin master")
       end
       res
@@ -42,11 +34,11 @@ module CIJoePassenger
     end
 
     def clone(url)
-      run "git clone #{url} #{repo_path}"
+      run "git clone #{url} #{name}"
     end
 
     def add_config_to_repo(key, value)
-      inside_repo do
+      inside(name) do
         run "git config --add \"#{key}\" \"#{value}\""
       end
     end

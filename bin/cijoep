@@ -15,13 +15,11 @@ Commands:
 install URL                   Install cijoe_passenger into current directory and configure for URL
 add NAME|REPO_URL [REPO_URL]  Adds app to current cijoe_passenger directory using repo at REPO_URL
 scan                          Scans apps for updates and sends necessary build requests to cijoe
+runner NAME COMMAND           Sets the runner COMMAND for cijoe_passenger instance NAME
   EOT
+when 'runner'
+  add = Add.new([ARGV.shift])
+  add.configure_cijoe_runner(ARGV.shift)
 else
-  # module CIJoePassenger
-  #   config_path = File.join('config', 'config.yml')
-  #   config_yml = File.exist?(config_path) ? YAML.load_file(config_path) : {}
-  #   Config = OpenStruct.new(config_yml)
-  # end
-
   CIJoePassenger.const_get(command.capitalize.to_sym).start(ARGV)
 end

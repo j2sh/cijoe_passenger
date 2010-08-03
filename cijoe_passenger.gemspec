@@ -30,6 +30,8 @@ Gem::Specification.new do |s|
      "cijoe_passenger.gemspec",
      "lib/cijoe_passenger.rb",
      "lib/cijoe_passenger/add.rb",
+     "lib/cijoe_passenger/apps/base.rb",
+     "lib/cijoe_passenger/cijoe.rb",
      "lib/cijoe_passenger/git.rb",
      "lib/cijoe_passenger/install.rb",
      "lib/cijoe_passenger/project.rb",
@@ -45,7 +47,8 @@ Gem::Specification.new do |s|
      "templates/config/config.yml.tt",
      "templates/log/access_log",
      "templates/log/error_log",
-     "templates/public/index.html"
+     "templates/public/index.html",
+     "templates/tmp/restart.txt"
   ]
   s.homepage = %q{http://github.com/vigetlabs/cijoe_passenger}
   s.rdoc_options = ["--charset=UTF-8"]

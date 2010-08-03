@@ -23,26 +23,27 @@ module CIJoePassenger
     def add_app_to_rack
       append_file 'config.ru' do
         <<-CONFIG
-        map "/#{name}" do
-          work_path = File.join(Dir.pwd, '#{name}')
-          module CIJoePassenger
-            module Apps
-              class #{name.capitalize} < CIJoe::Server; end
-            end
-          end
-          CIJoePassenger::Apps::#{name.capitalize}.configure do |config|
-            config.set :project_path, work_path
-            config.set :show_exceptions, true
-            config.set :lock, true
-          end
-          run CIJoePassenger::Apps::#{name.capitalize}
-        end
+\n\nmap "/#{name}" do
+  work_path = File.join(Dir.pwd, '#{name}')
+  module CIJoePassenger
+    module Apps
+      class #{name.capitalize} < Base; end
+    end
+  end
+  CIJoePassenger::Apps::#{name.capitalize}.configure do |config|
+    config.set :project_path, work_path
+    config.set :show_exceptions, true
+    config.set :lock, true
+  end
+  run CIJoePassenger::Apps::#{name.capitalize}
+end
         CONFIG
       end
     end
 
-    def configure_cijoe_runner
-      git.add_config_to_repo("cijoe.runner", Config.runner)
+    def configure_cijoe_runner(runner = nil)
+      runner ||= "rake cruise"
+      git.add_config_to_repo("cijoe.runner", runner)
     end
 
     def configure_campfire
@@ -56,7 +57,7 @@ module CIJoePassenger
     end
 
     def remind
-      puts "Don't forget to setup database.yml"
+      puts "\n\n*** Don't forget to setup #{name}/config/database.yml and/or bundle install ***"
     end
   end
 end
