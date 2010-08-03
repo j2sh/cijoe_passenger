@@ -2,6 +2,18 @@
 
 Generates a CIJoe passenger instance with projects that automatically build.
 
+== Usage
+
+Create a directory to serve as your cijoe root
+  mkdir cijoep
+
+Give install the url you want to server cijoe from
+  cd cijoep
+  cijoep install cijoe.local
+
+Add a project
+  cijoep add git@github.com:vigetlabs/cijoe_passenger.git
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
