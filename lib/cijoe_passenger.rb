@@ -5,16 +5,9 @@ require 'thor/group'
 require 'net/http'
 require 'uri'
 require 'ostruct'
+require 'yaml'
 require 'cijoe_passenger/git'
 require 'cijoe_passenger/project'
 require 'cijoe_passenger/scan'
 require 'cijoe_passenger/add'
 require 'cijoe_passenger/install'
-
-module CIJoePassenger
-  Config = OpenStruct.new({
-    :cijoe_url => "cijoe.yourcompany.com",
-    :apache_config_path => "config/cijoe_passenger.conf",
-    :runner => 'rake cruise'
-  })
-end

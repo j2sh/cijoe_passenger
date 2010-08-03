@@ -42,6 +42,7 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb",
      "templates/config/cijoe_passenger.conf.tt",
      "templates/config/config.ru",
+     "templates/config/config.yml.tt",
      "templates/log/access_log",
      "templates/log/error_log"
   ]

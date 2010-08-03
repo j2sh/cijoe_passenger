@@ -3,12 +3,16 @@ module CIJoePassenger
     include Thor::Actions
     attr_reader :git
     namespace :add
-    argument :name, :type => :string, :desc => "The project name"
-    argument :repo, :type => :string, :desc => "The git repo address"
+    argument :name, :type => :string, :desc => "The project name or repo if no name given"
+    argument :repo, :type => :string, :desc => "The git repo address if name differs from repo name", :default => ''
     argument :campfire, :type => :hash, :desc => "A hash of campfire options", :default => {}
 
     def initialize(args=[], options={}, config={})
       super
+      if @repo == ''
+        @repo = @name
+        @name = @repo.slice(/\/(.*).git$/, 1)
+      end
       @git = Git.new([name])
     end
 
