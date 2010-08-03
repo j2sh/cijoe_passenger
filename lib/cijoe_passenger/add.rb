@@ -51,6 +51,10 @@ module CIJoePassenger
       end
     end
 
+    def restart
+      run "touch tmp/restart.txt"
+    end
+
     def remind
       puts "Don't forget to setup database.yml"
     end
