@@ -17,11 +17,11 @@ add NAME|REPO_URL [REPO_URL]  Adds app to current cijoe_passenger directory usin
 scan                          Scans apps for updates and sends necessary build requests to cijoe
   EOT
 else
-  module CIJoePassenger
-    config_path = File.join('config', 'config.yml')
-    config_yml = File.exist?(config_path) ? YAML.load_file(config_path) : {}
-    Config = OpenStruct.new(config_yml)
-  end
+  # module CIJoePassenger
+  #   config_path = File.join('config', 'config.yml')
+  #   config_yml = File.exist?(config_path) ? YAML.load_file(config_path) : {}
+  #   Config = OpenStruct.new(config_yml)
+  # end
 
   CIJoePassenger.const_get(command.capitalize.to_sym).start(ARGV)
 end

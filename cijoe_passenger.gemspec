@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin Marney", "Tony Pitale"]
-  s.date = %q{2010-08-02}
+  s.date = %q{2010-08-03}
   s.default_executable = %q{cijoep}
   s.description = %q{Generates a CIJoe passenger instance with projects that automatically build.}
   s.email = %q{gotascii@gmail.com}
@@ -40,11 +40,12 @@ Gem::Specification.new do |s|
      "spec/cijoe_passenger/project_spec.rb",
      "spec/cijoe_passenger/scan_spec.rb",
      "spec/spec_helper.rb",
+     "templates/config.ru",
      "templates/config/cijoe_passenger.conf.tt",
-     "templates/config/config.ru",
      "templates/config/config.yml.tt",
      "templates/log/access_log",
-     "templates/log/error_log"
+     "templates/log/error_log",
+     "templates/public/index.html"
   ]
   s.homepage = %q{http://github.com/vigetlabs/cijoe_passenger}
   s.rdoc_options = ["--charset=UTF-8"]

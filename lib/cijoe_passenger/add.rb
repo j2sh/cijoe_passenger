@@ -20,18 +20,27 @@ module CIJoePassenger
       git.clone(repo)
     end
 
-    def link_rack_config
-      from = File.join("..", "config", "config.ru")
-      to = File.join(name, "config.ru")
-      run "ln -s #{from} #{to}"
+    def add_app_to_rack
+      append_file 'config.ru' do
+        <<-CONFIG
+        map "/#{name}" do
+          work_path = File.join(Dir.pwd, '#{name}')
+          module CIJoePassenger
+            module Apps
+              class #{name.capitalize} < CIJoe::Server; end
+            end
+          end
+          CIJoePassenger::Apps::#{name.capitalize}.configure do |config|
+            config.set :project_path, work_path
+            config.set :show_exceptions, true
+            config.set :lock, true
+          end
+          run CIJoePassenger::Apps::#{name.capitalize}
+        end
+        CONFIG
+      end
     end
-    
-    def add_app_to_apache_config
-      inject_into_file(Config.apache_config_path,
-        "  RackBaseURI /#{name}/public\n",
-        :after => "<VirtualHost *:80>\n")
-    end
-    
+
     def configure_cijoe_runner
       git.add_config_to_repo("cijoe.runner", Config.runner)
     end
@@ -40,10 +49,6 @@ module CIJoePassenger
       campfire.each do |k, v|
         @git.add_config_to_repo("campfire.#{k}", v)
       end
-    end
-
-    def create_empty_public
-      empty_directory File.join(name, 'public')
     end
 
     def remind

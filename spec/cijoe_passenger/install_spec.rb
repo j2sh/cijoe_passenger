@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Install do
   before do
-    @install = Install.new
+    @install = Install.new(['url'])
   end
 
   it "run directory with templates and current working directory" do

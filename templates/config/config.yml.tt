@@ -1,3 +1,2 @@
 cijoe_url: <%= @cijoe_url %>
-apache_config_path: config/cijoe_passenger.conf
 runner: rake cruise
